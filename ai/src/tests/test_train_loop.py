@@ -146,9 +146,11 @@ class TrainingLoopTests(unittest.TestCase):
             self.assertTrue(episode_data["end"])
             self.assertTrue(episode_data["score"])
 
-            actions_count = 0
-            for action_name in episode_data["actions_taken"]:
-                actions_count += episode_data["actions_taken"][action_name]
+            actions_count = sum(
+                episode_data["actions_taken"][action_name]
+                for action_name in episode_data["actions_taken"]
+            )
+
             self.assertEqual(actions_count, num_actions)
             index += 1
 

@@ -51,8 +51,9 @@ class Trainer:
         self.action_size = len(data_manager.action_names)
 
         self.request_url = (
-            self.BASE_URL + f"/{pod_name}/training_runs/{flight}/episodes"
+            f"{self.BASE_URL}/{pod_name}/training_runs/{flight}/episodes"
         )
+
 
         self.training_episodes = number_episodes
         self.not_learning_threshold = 3
@@ -165,8 +166,7 @@ class Trainer:
                 episode_end = math.floor(time.time())
 
                 if self.training_goal != "":
-                    loc = {}
-                    loc["score"] = episode_reward
+                    loc = {"score": episode_reward}
                     self.custom_training_goal_met = somewhat_safe_eval(
                         self.training_goal, loc
                     )

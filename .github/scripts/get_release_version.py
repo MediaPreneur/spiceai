@@ -6,17 +6,17 @@ with open(os.getenv("GITHUB_ENV"), "a") as githubEnv:
     releaseVersion = version.strip()
     is_prerelease = True
 
-    releaseNotePath = "docs/release_notes/v{}.md".format(releaseVersion)
+    releaseNotePath = f"docs/release_notes/v{releaseVersion}.md"
 
-    print("Checking if {} exists".format(releaseNotePath))
+    print(f"Checking if {releaseNotePath} exists")
     if os.path.exists(releaseNotePath):
-        print("Found {}".format(releaseNotePath))
+        print(f"Found {releaseNotePath}")
         # Set LATEST_RELEASE to true
         githubEnv.write("LATEST_RELEASE=true\n")
         is_prerelease = False
     else:
-        print("{} is not found".format(releaseNotePath))
-    print("Release build from v{}...".format(releaseVersion))
+        print(f"{releaseNotePath} is not found")
+    print(f"Release build from v{releaseVersion}...")
 
     if is_prerelease:
         githubEnv.write("PRE_RELEASE=true\n")

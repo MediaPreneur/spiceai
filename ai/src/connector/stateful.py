@@ -14,9 +14,7 @@ class StatefulConnector:
         self.data_manager = data_manager
 
     def update_state(self, next_timestamp: pd.Timestamp, new_data: dict):
-        new_series = {}
-        for data in new_data:
-            new_series[data] = [new_data[data]]
+        new_series = {data: [new_data[data]] for data in new_data}
         new_data_frame = pd.DataFrame(new_series, index={next_timestamp})
 
         self.data_manager.merge_training_row(new_data_frame)
@@ -27,10 +25,7 @@ class StatefulConnector:
         if action_name not in self.action_effects:
             return True
 
-        local_data = {}
-        for key, value in data_row.items():
-            local_data[key] = value[-1]
-
+        local_data = {key: value[-1] for key, value in data_row.items()}
         original_local = copy.deepcopy(local_data)
 
         try:
@@ -45,10 +40,11 @@ class StatefulConnector:
         except Exception as ex:
             raise LawInvalidException(repr(ex)) from ex
 
-        del_fields = []
-        for field, value in local_data.items():
-            if original_local[field] == value:
-                del_fields.append(field)
+        del_fields = [
+            field
+            for field, value in local_data.items()
+            if original_local[field] == value
+        ]
 
         for field in del_fields:
             del local_data[field]

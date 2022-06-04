@@ -133,10 +133,7 @@ class GetInferenceHandler:
                     result=result, message=message, error=True
                 )
             )
-        confidence = f"{probabilities[action_from_model]:.3f}"
-        if not model_exists:
-            confidence = 0.0
-
+        confidence = f"{probabilities[action_from_model]:.3f}" if model_exists else 0.0
         action_name = data_manager.action_names[action_from_model]
 
         if self.use_latest_time:
