@@ -155,7 +155,7 @@ class MainTestCase(unittest.TestCase):
         self.assertEqual(resp.result, "ok")
 
         # Step 2, load too little data
-        tiny_data = "\n".join(self.trader_data_csv.splitlines()[0:3])
+        tiny_data = "\n".join(self.trader_data_csv.splitlines()[:3])
         self.add_data("trader", tiny_data)
 
         # Step 3, inference

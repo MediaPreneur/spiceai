@@ -27,10 +27,7 @@ class EventDataManager(DataManagerBase):
         if self.interpretations is not None:
             index = self.current_index
             if index is not None and index.indicies is not None and len(index.indicies) > 0:
-                interval_interpretations = []
-                for i in index.indicies:
-                    interval_interpretations.append(self.interpretations.interpretations[i])
-                return interval_interpretations
+                return [self.interpretations.interpretations[i] for i in index.indicies]
         return None
 
     def get_current_window(self) -> pd.DataFrame:

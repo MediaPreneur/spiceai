@@ -5,7 +5,7 @@ import requests
 apiHost = "https://api.github.com"
 token = os.getenv("GITHUB_TOKEN")
 
-if token == None:
+if token is None:
     print("ERROR: Specify GITHUB_TOKEN environment variable")
     exit(1)
 
@@ -65,17 +65,16 @@ def createRelease(owner, repo, tag, release_name, body, prerelease):
     }
 
     resp = requests.post(url, headers=authHeader, json=data)
-    if not resp.ok:
-        # In our matrix publish example, it is possible for a race condition in happen when creating the release - so handle it by retrying to get the release
-        releaseInfo = getReleaseByTag(owner, repo, tag)
-        if releaseInfo is not None:
-            return releaseInfo
-        
-        # If we still aren't able to get the release, then print the creation error
-        print(resp.status_code)
-        print(resp.json())
-    else:
+    if resp.ok:
         return resp.json()
+    # In our matrix publish example, it is possible for a race condition in happen when creating the release - so handle it by retrying to get the release
+    releaseInfo = getReleaseByTag(owner, repo, tag)
+    if releaseInfo is not None:
+        return releaseInfo
+
+    # If we still aren't able to get the release, then print the creation error
+    print(resp.status_code)
+    print(resp.json())
 
 def updateRelease(id, owner, repo, release_name, body, prerelease):
     url = f"{apiHost}/repos/{owner}/{repo}/releases/{id}"
@@ -97,9 +96,9 @@ def actionUpload(args):
     releaseInfo = getReleaseByTag(args.owner, args.repo, args.tag)
 
     is_prerelease = args.prerelease == "true"
-    
+
     # Step 2: Create the release if it doesn't exist
-    if releaseInfo == None:
+    if releaseInfo is None:
         print("Creating release")
         releaseInfo = createRelease(args.owner, args.repo, args.tag, args.release_name, args.body, is_prerelease)
         print("Release created!")
@@ -128,7 +127,7 @@ def actionDelete(args):
     # Step 1: Get the release
     releaseInfo = getReleaseByTag(args.owner, args.repo, args.tag)
 
-    if releaseInfo == None:
+    if releaseInfo is None:
         print(f"Unable to find a release with tag: {args.tag}")
         return
 

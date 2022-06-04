@@ -13,10 +13,11 @@ class TimeSeriesDataManager(DataManagerBase):
                  actions_order: Dict[str, int], external_reward_funcs: str, laws: List[str]):
         super().__init__(param, fields, action_rewards, actions_order, external_reward_funcs, laws)
 
-        new_series = {}
         sorted_field_names = sorted(fields)
-        for field_name in sorted_field_names:
-            new_series[field_name] = [fields[field_name].initializer]
+        new_series = {
+            field_name: [fields[field_name].initializer]
+            for field_name in sorted_field_names
+        }
 
         self.massive_table_sparse = pd.DataFrame(new_series, index={self.param.epoch_time})
         self.massive_table_training_filled = None
@@ -94,12 +95,7 @@ class TimeSeriesDataManager(DataManagerBase):
         if self.interpretations is not None:
             index = self.interpretations.index[int(self.current_time.timestamp())]
             if index is not None and index.indicies is not None and len(index.indicies) > 0:
-                interval_interpretations = []
-                for i in index.indicies:
-                    interval_interpretations.append(
-                        self.interpretations.interpretations[i]
-                    )
-                return interval_interpretations
+                return [self.interpretations.interpretations[i] for i in index.indicies]
         return None
 
     def get_shape(self):

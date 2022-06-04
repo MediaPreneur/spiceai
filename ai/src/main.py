@@ -360,7 +360,7 @@ def main():
     aiengine_pb2_grpc.add_AIEngineServicer_to_server(AIEngine(), server)
     server.add_insecure_port("[::]:8004")
     server.start()
-    print(f"AIEngine: gRPC server listening on port {8004}", flush=True)
+    print('AIEngine: gRPC server listening on port 8004', flush=True)
 
     wait_parent_process()
     cleanup_on_shutdown()

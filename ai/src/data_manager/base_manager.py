@@ -39,7 +39,7 @@ class DataManagerBase(ABC):
             self.action_names[actions_order[action]] = action
 
         self.reward_funcs_module = None
-        if len(external_reward_funcs) > 0:
+        if external_reward_funcs != '':
             self.reward_funcs_module = load_module_from_code(external_reward_funcs, "reward_funcs")
 
             self.reward_funcs_module_actions = {}
@@ -59,8 +59,7 @@ class DataManagerBase(ABC):
 
             norm_rows = current_window[col] / denominator
 
-            for row in norm_rows:
-                result_array.append(row)
+            result_array.extend(iter(norm_rows))
         return np.nan_to_num(result_array)
 
     def __enter__(self):
@@ -140,12 +139,13 @@ class DataManagerBase(ABC):
                 next_state_dict,
                 next_state_intepretations)
 
-        loc = {}
-        loc["current_state"] = current_state_dict
-        loc["next_state"] = next_state_dict
-        loc["current_state_interpretations"] = current_state_interpretations
-        loc["next_state_interpretations"] = next_state_intepretations
-        loc["print"] = print
+        loc = {
+            "current_state": current_state_dict,
+            "next_state": next_state_dict,
+            "current_state_interpretations": current_state_interpretations,
+            "next_state_interpretations": next_state_intepretations,
+            "print": print,
+        }
 
         reward_func = self.action_rewards[action_name]
 
